@@ -1,3 +1,6 @@
+## EDIT:
+This fork is a modification of the ```rude-carnie project```. This runs both age and gender models in the same program. See the ```Running``` section to execute the program.
+
 Rude Carnie: Age and Gender Deep Learning with TensorFlow
 ==========================================================
 
