@@ -62,19 +62,14 @@ def classify_one_multi_crop(sess, label_list, softmax_output, coder, images, ima
         output /= batch_sz
         best = np.argmax(output)
         best_choice = (label_list[best], output[best])
+                
+        print('Guess @ 1 %s, prob = %.2f' % best_choice)
+    
         nlabels = len(label_list)
-        
-        if(nlabels > 2):   
-            if (best < 3):
-                age_class = "Child"
-            elif (best > 2 and best < 7):
-                age_class = "Adult"
-            elif (best > 6):
-                age_class = "Senior"
-            return age_class
-        else:
-            gender_class = best_choice[0]
-            return gender_class
+        if nlabels > 2:
+            output[best] = 0
+            second_best = np.argmax(output)
+            print('Guess @ 2 %s, prob = %.2f' % (label_list[second_best], output[second_best]))
                 
     except Exception as e:
         print(e)
@@ -136,12 +131,9 @@ def main():
     image_files = list(filter(lambda x: x is not None, [resolve_file(f) for f in files]))
     
     for image_file in image_files:
-        age_result = classify_one_multi_crop(sess, AGE_LIST, age_softmax, coder_age, age_image, image_file)
-        gender_result = classify_one_multi_crop(sess1, GENDER_LIST, gender_softmax, coder_gender, gender_image, image_file)
-            
-        print('Age_final: ', age_result)
-        print('Gender_final: ', gender_result)
-                  
+        classify_one_multi_crop(sess, AGE_LIST, age_softmax, coder_age, age_image, image_file)
+        classify_one_multi_crop(sess1, GENDER_LIST, gender_softmax, coder_gender, gender_image, image_file)
+                            
     sess.close()
     sess1.close()
     
